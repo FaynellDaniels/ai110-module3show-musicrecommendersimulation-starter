@@ -65,7 +65,44 @@ The maximum score is 5.5 points. Songs are sorted by score in descending order,
 and the top `k` songs are recommended. The same recipe is used by both the
 object-oriented and functional recommender interfaces.
 
-4. How Songs Are Recommended
+### Data Flow Plan
+
+1. **Input — User Preferences:** Read the user's favorite genre, favorite mood,
+   target energy, and acoustic preference.
+2. **Process — The Recommendation Loop:** Read each individual song from
+   `songs.csv`, compare its features with the user preferences, apply the
+   Algorithm Recipe, and store its total score and explanation.
+3. **Output — The Ranking:** Sort every scored song from highest to lowest and
+   return the top `k` recommendations.
+
+The flow for one song is:
+
+```text
+User preferences + one CSV song
+              |
+              v
+       Calculate each point value
+              |
+              v
+       Save total score and reasons
+              |
+              v
+      Rank with all other songs
+              |
+              v
+       Return the top K songs
+```
+
+### Potential Biases and Limitations
+
+The system might over-prioritize genre and energy, causing a song with the
+right mood but a different genre to rank lower than it deserves. The acoustic
+bonus may also favor songs with higher acousticness when the user has not
+provided enough information about that preference. Finally, the small CSV
+catalog and its fixed genre and mood labels may underrepresent some musical
+styles, so the recommendations cannot reflect tastes missing from the data.
+
+### How Songs Are Recommended
 
 The system will:
 1. Compare each song with the user's profile.
@@ -73,7 +110,26 @@ The system will:
 3. Rank songs from highest to lowest score.
 4. Recommend the songs with the highest scores.
 
-
+Input: User Preferences
+  genre, mood, target energy, acoustic preference
+          |
+          v
+Process: Evaluate Every Song in songs.csv
+  For each song:
+    - genre match?       +2.0
+    - mood match?        +1.0
+    - energy similarity? up to +2.0
+    - acoustic match?    +0.5
+    - calculate total score
+          |
+          v
+Ranking:
+  Sort all songs by score, highest first
+          |
+          v
+Output:
+  Return the top K recommendations
+  with each song's score and explanation
 
 ---
 
@@ -117,15 +173,32 @@ You can add more tests in `tests/test_recommender.py`.
 Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
 
 ```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+Loaded songs: 18
+
+Top recommendations for genre='pop', mood='happy', energy=0.80:
+
+1. Sunrise City by Neon Echo
+   Score: 4.96
+   Reasons: genre match (+2.0); mood match (+1.0); energy similarity (+1.96)
+
+2. Gym Hero by Max Pulse
+   Score: 3.74
+   Reasons: genre match (+2.0); energy similarity (+1.74)
+
+3. Rooftop Lights by Indigo Parade
+   Score: 2.92
+   Reasons: mood match (+1.0); energy similarity (+1.92)
+
+4. Night Drive Loop by Neon Echo
+   Score: 1.90
+   Reasons: energy similarity (+1.90)
+
+5. City Cipher by Northside Verse
+   Score: 1.86
+   Reasons: energy similarity (+1.86)
+
 ```
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
 
 ---
 
@@ -163,5 +236,4 @@ Write 1 to 2 paragraphs here about what you learned:
 
 - about how recommenders turn data into predictions
 - about where bias or unfairness could show up in systems like this
-
 

@@ -19,18 +19,20 @@ Prompts:
 
 ---
 
-## 3. How the Model Works  
+## 3. How the Model Works
 
-Explain your scoring approach in simple language.  
+The recommender compares each song with the user's favorite genre, favorite
+mood, target energy level, and acoustic preference. It awards 2 points for a
+genre match and 1 point for a mood match. Energy receives up to 2 points:
+the closer a song's energy is to the user's target, the more points it earns.
+If the user likes acoustic music, songs with high acousticness receive an
+additional 0.5 points.
 
-Prompts:  
-
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
-
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+The program repeats this scoring process for every song in the CSV file. It
+then sorts the songs from the highest score to the lowest score and returns the
+top recommendations. Each result includes an explanation listing the matches
+and points that produced its score, making the CLI-first simulation easy to
+understand.
 
 ---
 
