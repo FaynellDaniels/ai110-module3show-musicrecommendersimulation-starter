@@ -63,14 +63,7 @@ Prompts:
 
 ## 6. Limitations and Bias 
 
-Where the system struggles or behaves unfairly. 
-
-Prompts:  
-
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
+My recommendation system has several limitations that could affect the quality and fairness of its recommendations. It does not consider important features such as song lyrics, artist popularity, language, cultural influences, or detailed listening history. The music catalog is also limited, with some genres being underrepresented. For example, lofi has three songs, pop has two, and most other genres only have one, making it difficult to provide variety for users with different musical preferences. The scoring system can also overfit to one preference, especially energy level, which can contribute up to four points and potentially outweigh genre or mood matches. This means users whose preferences closely match the available catalog may receive better recommendations than those with less common tastes. To improve the system, I would expand the music catalog, allow partial matches for similar genres and moods, balance the scoring weights, and introduce an exploration feature that helps users discover new music instead of repeatedly receiving similar recommendations.
 
 ---
 
@@ -86,6 +79,37 @@ Prompts:
 - Any simple tests or comparisons you ran  
 
 No need for numeric metrics unless you created some.
+
+I tested the three profiles defined in `src/main.py`: High-Energy Pop,
+Chill Lofi, and Deep Intense Rock. High-Energy Pop ranked *Sunrise City*
+first, followed by *Rooftop Lights* and *Gym Hero*; this makes sense because
+the profile combines pop, happy mood, and a high target energy. Chill Lofi
+ranked *Midnight Coding*, *Library Rain*, and *Focus Flow* highest, which
+matches the lofi/chill preferences and the acoustic bonus. Deep Intense Rock
+ranked *Storm Runner* first, followed by *Gym Hero* and *Iron Eclipse*, which
+fits the intense, high-energy target.
+
+- **High-Energy Pop vs. Chill Lofi:** Pop recommends upbeat pop or
+  pop-adjacent songs, while Lofi shifts to lower-energy lofi songs. This
+  difference is expected because the target energy changes from `0.80` to
+  `0.40`, the genre and mood labels change, and Chill Lofi receives acoustic
+  bonuses.
+- **High-Energy Pop vs. Deep Intense Rock:** Both profiles favor energetic
+  music, but Pop puts *Sunrise City* first while Rock puts *Storm Runner*
+  first. The genre and mood matches explain the different leaders, while
+  *Gym Hero* appears in both lists because its `0.93` energy is close to both
+  high-energy targets.
+- **Chill Lofi vs. Deep Intense Rock:** These profiles produce the clearest
+  contrast: Chill Lofi favors calm, acoustic-leaning songs, whereas Deep
+  Intense Rock favors loud, intense songs. Their different energy targets and
+  categorical preferences make the non-overlapping top recommendations
+  reasonable.
+
+The most surprising result was that *Gym Hero* reached the top three for both
+High-Energy Pop and Deep Intense Rock even though its mood is `intense` rather
+than `happy` and its genre is not rock. This demonstrates the effect of the
+weight-shift experiment: energy similarity can contribute up to four points
+and sometimes outweighs an unmatched genre or mood.
 
 ---
 

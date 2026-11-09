@@ -210,6 +210,46 @@ Use this section to document the experiments you ran. For example:
 - What happened when you added tempo or valence to the score
 - How did your system behave for different types of users
 
+## System Evaluation
+
+The reusable user preference dictionaries are defined in
+[`src/main.py`](src/main.py), and the scoring and ranking logic is implemented
+in [`src/recommender.py`](src/recommender.py). Three baseline profiles cover
+different parts of the catalog:
+
+| Profile | Preferences | Expected behavior |
+| --- | --- | --- |
+| **High-Energy Pop** | `genre="pop"`, `mood="happy"`, `energy=0.80` | Prefer *Sunrise City* and other upbeat pop or close-energy songs. |
+| **Chill Lofi** | `genre="lofi"`, `mood="chill"`, `energy=0.40`, `likes_acoustic=True` | Prefer *Midnight Coding* and *Library Rain*, with an additional acoustic bonus. |
+| **Deep Intense Rock** | `genre="rock"`, `mood="intense"`, `energy=0.95` | Prefer *Storm Runner* because it matches the genre and mood and is close to the target energy. |
+
+### Adversarial and Edge-Case Profiles
+
+These profiles can be passed to `score_song` or `recommend_songs` to test
+whether the scoring logic behaves predictably:
+
+1. **Conflicting signals:** `{"genre": "pop", "mood": "sad", "energy": 0.90}`.
+   The system should not invent a mood match; it should rank high-energy pop
+   songs using the genre and energy points only.
+2. **Exact opposite energy:** `{"genre": "rock", "mood": "intense", "energy": 0.0}`.
+   This checks that the energy score falls to zero for a song at energy `1.0`
+   while genre and mood points still apply.
+3. **Unknown categorical values:** `{"genre": "unknown", "mood": "unknown", "energy": 0.5}`.
+   No genre or mood matches should be reported, but every song should still
+   receive a bounded energy-similarity score.
+4. **Boundary energy values:** test `energy=0.0` and `energy=1.0` to verify
+   that the similarity formula remains within its intended `0.0` to `2.0`
+   range.
+5. **Acoustic tie-breaker:** compare the same categorical and energy
+   preferences with `likes_acoustic=False` and `likes_acoustic=True`. Only
+   songs with `acousticness >= 0.60` should gain the `+0.5` bonus.
+
+These cases probe conflicting preferences, missing matches, numeric
+boundaries, and the optional acoustic signal. They also expose a limitation:
+the current scorer adds independent points rather than modeling trade-offs, so
+a strong genre match can still outrank a song with the preferred mood but a
+different genre.
+
 ---
 
 ## Limitations and Risks
@@ -236,4 +276,3 @@ Write 1 to 2 paragraphs here about what you learned:
 
 - about how recommenders turn data into predictions
 - about where bias or unfairness could show up in systems like this
-
