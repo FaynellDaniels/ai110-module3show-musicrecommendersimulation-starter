@@ -102,6 +102,7 @@ The system will:
 3. Rank songs from highest to lowest score.
 4. Recommend the songs with the highest scores.
 
+```
 Input: User Preferences
   genre, mood, target energy, acoustic preference
           |
@@ -122,7 +123,7 @@ Ranking:
 Output:
   Return the top K recommendations
   with each song's score and explanation
-
+```
 ---
 
 ## Getting Started
