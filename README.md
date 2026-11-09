@@ -20,7 +20,7 @@ and explains the points earned by each recommendation.
 
 ## How The System Works
 
-- Real-world music recommendation systems analyze a user's listening habits, preferences, and interests to suggest songs they are likely to enjoy. My recommendation system will use information such as genre, mood, energy, and tempo to compare songs with a user's preferences. Each song will receive a compatibility score based on how closely its features match the user's profile. The system will prioritize recommending songs that match the user's musical taste while also introducing some variety so they can discover new music.
+Real-world music recommendation systems analyze a user's listening habits, preferences, and interests to suggest songs they are likely to enjoy. My recommendation system will use information such as genre, mood, energy, and tempo to compare songs with a user's preferences. Each song will receive a compatibility score based on how closely its features match the user's profile. The system will prioritize recommending songs that match the user's musical taste while also introducing some variety so they can discover new music.
 
 1. Song Object
 
@@ -43,7 +43,7 @@ Each UserProfile object will store the user's music preferences:
 
 3. Recommender Object
 
--The Recommender will calculate a compatibility score for each song by comparing its features against the user's preferences.
+The Recommender will calculate a compatibility score for each song by comparing its features against the user's preferences.
 
 ### Algorithm Recipe: Scoring Logic Design
 
@@ -93,14 +93,6 @@ User preferences + one CSV song
        Return the top K songs
 ```
 
-### Potential Biases and Limitations
-
-The system might over-prioritize genre and energy, causing a song with the
-right mood but a different genre to rank lower than it deserves. The acoustic
-bonus may also favor songs with higher acousticness when the user has not
-provided enough information about that preference. Finally, the small CSV
-catalog and its fixed genre and mood labels may underrepresent some musical
-styles, so the recommendations cannot reflect tastes missing from the data.
 
 ### How Songs Are Recommended
 
@@ -254,25 +246,18 @@ different genre.
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+The system might over-prioritize genre and energy, causing a song with the
+right mood but a different genre to rank lower than it deserves. The acoustic
+bonus may also favor songs with higher acousticness when the user has not
+provided enough information about that preference. Finally, the small CSV
+catalog and its fixed genre and mood labels may underrepresent some musical
+styles, so the recommendations cannot reflect tastes missing from the data.
 
 ---
 
 ## Reflection
 
-Read and complete `model_card.md`:
+Read `model_card.md`:
 
 [**Model Card**](model_card.md)
 
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
